@@ -215,47 +215,39 @@ function extractEmails(str) {
  */
 
 function getRectangleString(width, height) {
-  const leftTop = 0x250C;
-  const leftBottom = 0x2514;
-  const rigthTop = 0x2510;
-  const rigthBottom = 0x2518;
-  const horizontal = 0x2500;
-  const vertical = 0x2502;
-
   const h = [...Array(height)];
-  for (let i = 0; i < h.length; i + 1) {
+  for (let i = 0; i < h.length; i++) {
     h[i] = [...Array(width)];
   }
-
   const rectangle = h.reduce((a, c, i) => {
     c.forEach((e, j) => {
       if (i === 0) {
 		  if (j === 0) {
-		    c[j] = leftTop;
+		    c[j] = '┌';
 		  } else if (j === c.length - 1) {
-          c[j] = rigthTop;
+          c[j] = '┐';
 		  } else {
-          c[j] = horizontal;
+          c[j] = '─';
 		  }
 	  } else if (i === h.length - 1) {
         if (j === 0) {
-		    c[j] = leftBottom;
+		    c[j] = '└';
 		  } else if (j === c.length - 1) {
-          c[j] = rigthBottom;
+          c[j] = '┘';
 		  } else {
-          c[j] = horizontal;
+          c[j] = '─';
 		  }
 	  } else if (j === 0 || j === c.length - 1) {
-		  c[j] = vertical;
+		  c[j] = '│';
       } else {
-		  c[j] = 0;
+		  c[j] = ' ';
       }
     });
-    a.push(String.fromCodePoint(...c));
+    a.push(c.join(''));
     return a;
   }, []);
 
-  return rectangle.join('\n');
+  return `${rectangle.join('\n')}\n`;
 }
 
 /**
@@ -280,7 +272,7 @@ function encodeToRot13(str) {
   const lowerCaseROT13 = 'nopqrstuvwxyzabcdefghijklm'.split('');
   const arr = str.split('').map((e) => {
     if (alpha.indexOf(e) > -1) {
-      return alpha.indexOf(e) >= 25
+      return alpha.indexOf(e) > 25
         ? lowerCaseROT13[alpha.indexOf(e) - 26] : upperCaseROT13[alpha.indexOf(e)];
     }
     return e;
@@ -305,7 +297,7 @@ function encodeToRot13(str) {
  *   isString(new String('test')) => true
  */
 function isString(value) {
-  return typeof value === 'string';
+  return typeof value === 'string' || value instanceof String;
 }
 
 // console.log(isString()) // => false

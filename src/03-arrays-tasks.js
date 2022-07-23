@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 /* ********************************************************************************************
  *                                                                                            *
  * Please read the following tutorial before implementing tasks:                               *
@@ -418,12 +419,7 @@ function getFalsyValuesCount(arr) {
  *    [ true, 0, 1, 'true' ], true => 1
  */
 function findAllOccurrences(arr, item) {
-  const map = new Map();
-  arr.forEach((e) => {
-    // eslint-disable-next-line no-unused-expressions
-    map.has(e) === false ? map.set(e, 1) : map.set(e, map.get(e) + 1);
-  });
-  return map.has(item) ? map.get(item) : 0;
+  return arr.filter((value) => value === item).length;
 }
 
 // console.log(findAllOccurrences([ 1, 2, 3, 4, 5 ], 0))
@@ -595,17 +591,12 @@ function distinct(arr) {
  */
 function group(array, keySelector, valueSelector) {
   const map = new Map();
-  array.forEach((e) => {
-    const arr = map.get(e[keySelector]);
-    if (arr) {
-      arr.push(e[valueSelector]);
-    }
-    // eslint-disable-next-line no-unused-expressions
-    map.has(e[keySelector]) === false
-      ? map.set(e[keySelector], [e[valueSelector]])
-      : map.set(e[keySelector], arr);
-  });
-  return map;
+  return array.reduce((a, c) => {
+    a.has(keySelector(c))
+      ? a.get(keySelector(c)).push(valueSelector(c))
+      : a.set(keySelector(c), [valueSelector(c)]);
+    return a;
+  }, map);
 }
 
 // /const array = [
@@ -634,10 +625,10 @@ function group(array, keySelector, valueSelector) {
  *   [[1, 2], [3, 4], [5, 6]], (x) => x     =>   [ 1, 2, 3, 4, 5, 6 ]
  *   ['one','two','three'], x=>x.split('')  =>   ['o','n','e','t','w','o','t','h','r','e','e']
  */
-function selectMany(/* arr, childrenSelector */) {
-  throw new Error('Not implemented');
-}
 
+function selectMany(arr, childrenSelector) {
+  return arr.reduce((a, c) => a.concat(childrenSelector(c)), []);
+}
 
 /**
  * Returns an element from the multidimensional array by the specified indexes.
@@ -651,8 +642,8 @@ function selectMany(/* arr, childrenSelector */) {
  *   ['one','two','three'], [2]       => 'three'  (arr[2])
  *   [[[ 1, 2, 3]]], [ 0, 0, 1 ]      => 2        (arr[0][0][1])
  */
-function getElementByIndexes(/* arr, indexes */) {
-  throw new Error('Not implemented');
+function getElementByIndexes(arr, indexes) {
+  return indexes.reduce((a, i) => a[i], arr);
 }
 
 
@@ -674,9 +665,18 @@ function getElementByIndexes(/* arr, indexes */) {
  *   [ 1, 2, 3, 4, 5, 6, 7, 8 ]   =>  [ 5, 6, 7, 8, 1, 2, 3, 4 ]
  *
  */
-function swapHeadAndTail(/* arr */) {
-  throw new Error('Not implemented');
+function swapHeadAndTail(arr) {
+  const pivot = Math.trunc(arr.length / 2);
+  const head = arr.slice(0, pivot);
+  const tail = (arr.length % 2) ? arr.slice(pivot + 1) : arr.slice(pivot);
+  arr.splice(0, tail.length, ...tail);
+  arr.length % 2
+    ? arr.splice(pivot + 1, head.length, ...head)
+    : arr.splice(pivot, head.length, ...head);
+  return arr;
 }
+
+// console.log(swapHeadAndTail([1, 2, 3, 4, 5]))
 
 module.exports = {
   findElement,

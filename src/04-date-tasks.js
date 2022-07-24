@@ -1,3 +1,6 @@
+/* eslint-disable no-nested-ternary */
+/* eslint-disable prefer-template */
+/* eslint-disable no-console */
 /* *******************************************************************************************
  *                                                                                           *
  * Please read the following tutorial before implementing tasks:                              *
@@ -19,8 +22,8 @@
  *    'Tue, 26 Jan 2016 13:48:02 GMT' => Date()
  *    'Sun, 17 May 1998 03:00:00 GMT+01' => Date()
  */
-function parseDataFromRfc2822(/* value */) {
-  throw new Error('Not implemented');
+function parseDataFromRfc2822(value) {
+  return new Date(value);
 }
 
 /**
@@ -34,8 +37,8 @@ function parseDataFromRfc2822(/* value */) {
  *    '2016-01-19T16:07:37+00:00'    => Date()
  *    '2016-01-19T08:07:37Z' => Date()
  */
-function parseDataFromIso8601(/* value */) {
-  throw new Error('Not implemented');
+function parseDataFromIso8601(value) {
+  return new Date(value);
 }
 
 
@@ -53,10 +56,12 @@ function parseDataFromIso8601(/* value */) {
  *    Date(2012,1,1)    => true
  *    Date(2015,1,1)    => false
  */
-function isLeapYear(/* date */) {
-  throw new Error('Not implemented');
+function isLeapYear(date) {
+  const newDate = new Date(date.setDate(date.getDate() + 28));
+  return newDate.getDate() === 29;
 }
 
+// console.log(isLeapYear(new Date(2012, 1, 1)));
 
 /**
  * Returns the string representation of the timespan between two dates.
@@ -73,8 +78,13 @@ function isLeapYear(/* date */) {
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,10,0,0,250)     => "00:00:00.250"
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,15,20,10,453)   => "05:20:10.453"
  */
-function timeSpanToString(/* startDate, endDate */) {
-  throw new Error('Not implemented');
+function timeSpanToString(startDate, endDate) {
+  const dif = endDate - startDate;
+  const hours = Math.trunc((dif / 3600000) % 100).toString();
+  const minutes = Math.trunc((dif / 60000) % 60).toString();
+  const seconds = Math.trunc((dif / 1000) % 60).toString();
+  const ms = Math.trunc(dif % 1000).toString();
+  return `${hours.length === 1 ? '0' + hours : hours}:${minutes.length === 1 ? '0' + minutes : minutes}:${seconds.length === 1 ? '0' + seconds : seconds}.${ms.length === 2 ? '0' + ms : ms.length === 1 ? '00' + ms : ms}`;
 }
 
 
@@ -94,8 +104,16 @@ function timeSpanToString(/* startDate, endDate */) {
  *    Date.UTC(2016,3,5,18, 0) => Math.PI
  *    Date.UTC(2016,3,5,21, 0) => Math.PI/2
  */
-function angleBetweenClockHands(/* date */) {
-  throw new Error('Not implemented');
+function angleBetweenClockHands(date) {
+  const hours = date.getUTCHours() > 11
+    ? date.getUTCHours() - 12
+    : date.getUTCHours();
+  const minutes = date.getUTCMinutes();
+  const hourDeg = hours * 30 + minutes * 0.5;
+  const minDeg = minutes * 6;
+  const dif = Math.abs(hourDeg - minDeg);
+  const a = dif > 180 ? 360 - dif : dif;
+  return (a * Math.PI) / 180;
 }
 
 

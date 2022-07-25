@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-expressions */
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-plusplus */
 /* *************************************************************************************************
  *                                                                                                *
@@ -235,8 +237,8 @@ function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
  * 'rotator' => 'rotator'
  * 'noon' => 'noon'
  */
-function reverseString(/* str */) {
-  throw new Error('Not implemented');
+function reverseString(str) {
+  return str.split('').reverse().join('');
 }
 
 
@@ -252,8 +254,8 @@ function reverseString(/* str */) {
  *   87354 => 45378
  *   34143 => 34143
  */
-function reverseInteger(/* num */) {
-  throw new Error('Not implemented');
+function reverseInteger(num) {
+  return num.toString().split('').reverse().join('');
 }
 
 
@@ -277,8 +279,25 @@ function reverseInteger(/* num */) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
+
+function isCreditCardNumber(ccn) {
+  const digitString = `${ccn}`;
+  const numOfDigits = digitString.length;
+  const parity = (numOfDigits % 2);
+
+  const sum = digitString.slice(0, -1).split('').reduce((a, c, i) => {
+    let digit = +c;
+    if (i % 2 === parity) digit *= 2;
+    if (digit > 9) digit -= 9;
+    a += digit;
+    return a;
+  }, 0);
+
+  const checkSum = 10 - (sum % 10);
+  const lastDigit = +digitString.slice(-1);
+
+  if (checkSum === 10 && lastDigit === 0) return true;
+  return checkSum === lastDigit;
 }
 
 /**
@@ -295,8 +314,9 @@ function isCreditCardNumber(/* ccn */) {
  *   10000 ( 1+0+0+0+0 = 1 ) => 1
  *   165536 (1+6+5+5+3+6 = 26,  2+6 = 8) => 8
  */
-function getDigitalRoot(/* num */) {
-  throw new Error('Not implemented');
+function getDigitalRoot(num) {
+  const n = num.toString().split('').reduce((a, c) => a + +c, 0);
+  return n < 9 ? n : getDigitalRoot(n);
 }
 
 
@@ -321,8 +341,20 @@ function getDigitalRoot(/* num */) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+
+function isBracketsBalanced(str) {
+  const obj = {
+    '[': ']',
+    '{': '}',
+    '(': ')',
+    '<': '>',
+  };
+  const arr = str.split('');
+  const stack = [];
+  arr.forEach((e) => {
+    obj[stack[stack.length - 1]] === e ? stack.pop() : stack.push(e);
+  });
+  return !stack.length;
 }
 
 
@@ -346,8 +378,8 @@ function isBracketsBalanced(/* str */) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  return (num).toString(n);
 }
 
 
@@ -363,8 +395,19 @@ function toNaryString(/* num, n */) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  const arr = [];
+  pathes.forEach((e) => arr.push(e.split('/')));
+  let str = '';
+  for (let i = 0; i < arr[0].length; i++) {
+    for (let j = 0; j < arr.length; j++) {
+      if (arr[0][i] !== arr[j][i]) {
+        return `${str}`;
+      }
+    }
+    str += `${arr[0][i]}/`;
+  }
+  return str;
 }
 
 
@@ -386,8 +429,21 @@ function getCommonDirectoryPath(/* pathes */) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const result = [];
+  for (let i = 0; i < m1.length; i++) {
+    result[i] = [];
+  }
+  for (let i = 0; i < m2[0].length; i++) {
+    for (let j = 0; j < m1.length; j++) {
+      let sum = 0;
+      for (let k = 0; k < m2.length; k += 1) {
+        sum += m1[j][k] * m2[k][i];
+      }
+      result[j][i] = sum;
+    }
+  }
+  return result;
 }
 
 

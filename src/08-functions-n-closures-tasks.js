@@ -23,8 +23,8 @@
  *   getComposition(Math.sin, Math.asin)(x) => Math.sin(Math.asin(x))
  *
  */
-function getComposition(/* f, g */) {
-  throw new Error('Not implemented');
+function getComposition(f, g) {
+  return (x) => f(g(x));
 }
 
 
@@ -44,8 +44,8 @@ function getComposition(/* f, g */) {
  *   power05(16) => 4
  *
  */
-function getPowerFunction(/* exponent */) {
-  throw new Error('Not implemented');
+function getPowerFunction(exponent) {
+  return (num) => num ** exponent;
 }
 
 
@@ -81,8 +81,14 @@ function getPolynom() {
  *   ...
  *   memoizer() => the same random number  (next run, returns the previous cached result)
  */
-function memoize(/* func */) {
-  throw new Error('Not implemented');
+function memoize(func) {
+  const cache = {};
+  return (x) => {
+    if (!cache[x]) {
+      cache[x] = func(x);
+    }
+    return cache[x];
+  };
 }
 
 
@@ -101,10 +107,15 @@ function memoize(/* func */) {
  * }, 2);
  * retryer() => 2
  */
-function retry(/* func, attempts */) {
-  throw new Error('Not implemented');
+function retry(func, attempts) {
+  return () => {
+    try {
+      return func();
+    } catch (e) {
+      return (retry(func, attempts - 1)());
+    }
+  };
 }
-
 
 /**
  * Returns the logging wrapper for the specified method,
@@ -129,8 +140,16 @@ function retry(/* func, attempts */) {
  * cos(3.141592653589793) ends
  *
  */
-function logger(/* func, logFunc */) {
-  throw new Error('Not implemented');
+function logger(func, logFunc) {
+  const fn = (...x) => {
+    const start = `${func.name}(${JSON.stringify(x).slice(1, -1)}) starts`;
+    logFunc(start);
+    const result = func(...x);
+    const end = `${func.name}(${JSON.stringify(x).slice(1, -1)}) ends`;
+    logFunc(end);
+    return result;
+  };
+  return fn;
 }
 
 

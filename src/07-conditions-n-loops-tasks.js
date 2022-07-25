@@ -217,8 +217,8 @@ function findFirstSingleChar(str) {
 function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
   const start = isStartIncluded ? '[' : '(';
   const end = isEndIncluded ? ']' : ')';
-  const first = a < b ? a : b;
-  const second = b > a ? b : a;
+  const first = (a < b) ? a : b;
+  const second = (b > a) ? b : a;
   return `${start + first}, ${second}${end}`;
 }
 
